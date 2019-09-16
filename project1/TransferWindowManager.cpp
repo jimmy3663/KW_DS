@@ -151,11 +151,49 @@ TransferWindowManager::SoccerTeam TransferWindowManager::getBestTeam()
 
 	int temp_budget[6];
 	for(int i=0; i<6 ;i++){
-		temp_budget[i] = m_budget-gkNode->m_data.m_transfer_fee;
+		temp_budget[i] = m_budget - gkNode->m_data.m_transfer_fee;
 	}
+
 	int team_power[6];
 
-	SoccerPlayerData bfw1 = getBestPlayer(fwBST, temp_budget[0]);
+	int biggestpw = 0;
+	int hold_budget = fwBST.pvec[0].m_transfer_fee + mfBST.pvec[0].m_transfer_fee + dfBST.pvec[0].m_transfer_fee;
+	for(int i=0; i < fwBST.pvec.size(); i++){
+		for(int j=0; j<mfBST.pvec.size() ; j++){
+			for(int k=0 ; k<dfBST.pvec.size(); k++){
+				int con_fee = fwBST.pvec[i].m_transfer_fee + mfBST.pvec[j].m_transfer_fee + dfBST.pvec[k].m_transfer_fee;
+				int con_pw = fwBST.pvec[i].m_ability + mfBST.pvec[j].m_ability + dfBST.pvec[k].m_ability;
+				if(con_fee <= temp_budget[0]){
+					if(biggestpw <= con_pw){
+						if(biggestpw == con_pw){
+							if(hold_budget > con_fee){
+								biggestpw = con_pw;
+								hold_budget = con_fee;
+								best_team.fw = fwBST.pvec[i];
+								best_team.mf = mfBST.pvec[j];
+								best_team.df = dfBST.pvec[k];
+								best_team.gk = gkNode->m_data;
+								best_team.sum_ability = biggestpw + gkNode->m_data.m_ability;
+								best_team.sum_transfer_fee = hold_budget + gkNode->m_data.m_transfer_fee;
+							}
+						}
+						else{
+							biggestpw = con_pw;
+							hold_budget = con_fee;
+							best_team.fw = fwBST.pvec[i];
+							best_team.mf = mfBST.pvec[j];
+							best_team.df = dfBST.pvec[k];
+							best_team.gk = gkNode->m_data;
+							best_team.sum_ability = biggestpw + gkNode->m_data.m_ability;
+							best_team.sum_transfer_fee = hold_budget + gkNode->m_data.m_transfer_fee;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/*SoccerPlayerData bfw1 = getBestPlayer(fwBST, temp_budget[0]);
 	temp_budget[0] = temp_budget[0] - bfw1.m_transfer_fee;
 	SoccerPlayerData bmf1 = getBestPlayer(mfBST, temp_budget[0]);
 	temp_budget[0] = temp_budget[0] - bmf1.m_transfer_fee;
@@ -208,10 +246,9 @@ TransferWindowManager::SoccerTeam TransferWindowManager::getBestTeam()
 	int maxpower=0;
 	vector<int> num;
 	for(int i=0; i<6; i++){
-		if(maxpower <= team_power[i]){
-			maxpower = team_power[i];
+		if(biggestpw == team_power[i]){
 			num.push_back(i);
-		}
+		}	
 	}
 
 	best_team.gk = gkNode->m_data;
@@ -319,7 +356,7 @@ TransferWindowManager::SoccerTeam TransferWindowManager::getBestTeam()
 			best_team.sum_transfer_fee = bfw6.m_transfer_fee + bmf6.m_transfer_fee + bdf6.m_transfer_fee + gkNode->m_data.m_transfer_fee;
 			best_team.sum_ability = bfw6.m_ability + bmf6.m_ability + bdf6.m_ability + gkNode->m_data.m_ability;
 		}
-	}
+	}*/
 
 
 	fwBST.deletion(best_team.fw.m_ability);

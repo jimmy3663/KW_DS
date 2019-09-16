@@ -11,6 +11,7 @@ class BinarySearchTree
 	friend class TransferWindowManager;
 private:
 	TreeNode * m_root;
+	vector<SoccerPlayerData> pvec;
 public:
 	BinarySearchTree() { m_root = NULL; }
 	BinarySearchTree(SoccerPlayerData& data){m_root = new TreeNode(data, NULL, NULL);}

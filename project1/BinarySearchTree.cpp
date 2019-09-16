@@ -10,6 +10,7 @@ void BinarySearchTree::insert(SoccerPlayerData &data){
 	} 
 
 	p = new TreeNode(data, NULL, NULL);
+	pvec.push_back(data);
 	if(m_root){
 		if(p->m_data.m_ability < pp->m_data.m_ability) pp->m_left = p;
 		else pp->m_right = p;
